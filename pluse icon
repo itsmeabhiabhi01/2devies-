@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Draggable Social Media Plus Icon</title>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+        * {transition: 0.33s ease;}
+        body {background-color: #9AB; margin: 0; overflow: hidden;}
+        
+        .plus-button {
+            position: absolute;
+            bottom: 30px;
+            right: 60px;
+            z-index: 100;
+            height: 50px; /* Smaller size */
+            width: 50px;
+            border-radius: 100%;
+            background-color: #2196F3; /* Blue color */
+            box-shadow: 2px 2px 8px 0px rgba(0,0,0,0.5);
+            backface-visibility: hidden;
+            transform: scale(0.9);
+            cursor: move;
+            user-select: none;
+        }
+        .plus-button::before {
+            content: "+";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 20px; /* Smaller, refined plus icon */
+            font-weight: 700; /* Bolder for clarity */
+            line-height: 1;
+        }
+        .plus-button:hover {
+            transform: scale(1);
+            box-shadow: 3px 3px 10px 1px rgba(0,0,0,0.5);
+        }
+        .plus-button:active {
+            transform: scale(0.95);
+            box-shadow: 2px 2px 9px 0px rgba(0,0,0,0.5);
+        }
+        .plus-button.open {
+            transform: rotate(45deg) scale(0.9);
+            background-color: #1976D2; /* Darker blue */
+            box-shadow: 2px 2px 8px 0px rgba(0,0,0,0.5);
+        }
+        .plus-button.open:hover {
+            transform: scale(1) rotate(45deg);
+            box-shadow: 3px 3px 10px 1px rgba(0,0,0,0.5);
+        }
+        .plus-button.open:active {
+            transform: scale(0.95) rotate(45deg);
+            box-shadow: 2px 2px 9px 0px rgba(0,0,0,0.5);
+        }
+        
+        .social-button {
+            position: absolute;
+            height: 40px; /* Slightly smaller for compactness */
+            width: 40px;
+            transform: scale(0.8);
+            background-size: 150% !important;
+            border-radius: 100%;
+            box-shadow: 2px 2px 6px 0px rgba(0,0,0,0.4);
+            cursor: pointer;
+            z-index: 99;
+            backface-visibility: hidden;
+        }
+        .social-button:hover {
+            transform: scale(1);
+            transition: 0.35s cubic-bezier(0.3, 0.2, 0, 2.5);
+        }
+        .social-button.twitter-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/twitter-256.png") no-repeat center;
+        }
+        .social-button.twitter-button.active {
+            transform: scale(1) translate(0, -70px); /* Smaller radius */
+        }
+        .social-button.facebook-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/facebook-256.png") no-repeat center;
+        }
+        .social-button.facebook-button.active {
+            transform: scale(1) translate(49.5px, -49.5px);
+        }
+        .social-button.pinterest-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/pinterest-256.png") no-repeat center;
+        }
+        .social-button.pinterest-button.active {
+            transform: scale(1) translate(70px, 0);
+        }
+        .social-button.insta-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/instagram-256.png") no-repeat center;
+        }
+        .social-button.insta-button.active {
+            transform: scale(1) translate(49.5px, 49.5px);
+        }
+        .social-button.youtube-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/youtube-256.png") no-repeat center;
+        }
+        .social-button.youtube-button.active {
+            transform: scale(1) translate(0, 70px);
+        }
+        .social-button.linkedin-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/linkedin-256.png") no-repeat center;
+        }
+        .social-button.linkedin-button.active {
+            transform: scale(1) translate(-49.5px, 49.5px);
+        }
+        .social-button.whatsapp-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/whatsapp-256.png") no-repeat center;
+        }
+        .social-button.whatsapp-button.active {
+            transform: scale(1) translate(-70px, 0);
+        }
+        .social-button.snapchat-button {
+            background: url("https://cdn4.iconfinder.com/data/icons/social-icon-4/842/snapchat-256.png") no-repeat center;
+        }
+        .social-button.snapchat-button.active {
+            transform: scale(1) translate(-49.5px, -49.5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="plus-button"></div>
+    <div class="social-button twitter-button"></div>
+    <div class="social-button facebook-button"></div>
+    <div class="social-button pinterest-button"></div>
+    <div class="social-button insta-button"></div>
+    <div class="social-button youtube-button"></div>
+    <div class="social-button linkedin-button"></div>
+    <div class="social-button whatsapp-button"></div>
+    <div class="social-button snapchat-button"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const plusButton = document.querySelector('.plus-button');
+            const socialButtons = document.querySelectorAll('.social-button');
+            let isDragging = false;
+            let currentX, currentY, initialX, initialY;
+            const radius = 70; /* Smaller radius for better fit */
+            const buttonSize = 50; /* Smaller plus button */
+            const socialButtonSize = 40; /* Smaller social buttons */
+
+            // Toggle social buttons
+            plusButton.addEventListener('click', function(e) {
+                if (!isDragging) {
+                    this.classList.toggle('open');
+                    socialButtons.forEach(button => button.classList.toggle('active'));
+                }
+            });
+
+            // Dragging functionality
+            plusButton.addEventListener('mousedown', startDragging);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDragging);
+
+            function startDragging(e) {
+                initialX = e.clientX - currentX;
+                initialY = e.clientY - currentY;
+                isDragging = true;
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    let newX = e.clientX - initialX;
+                    let newY = e.clientY - initialY;
+
+                    // Constrain within viewport to keep all icons visible
+                    newX = Math.max(radius + socialButtonSize, Math.min(window.innerWidth - buttonSize - radius - socialButtonSize, newX));
+                    newY = Math.max(radius + socialButtonSize, Math.min(window.innerHeight - buttonSize - radius - socialButtonSize, newY));
+
+                    currentX = newX;
+                    currentY = newY;
+                    plusButton.style.left = currentX + 'px';
+                    plusButton.style.top = currentY + 'px';
+                    plusButton.style.right = 'auto';
+                    plusButton.style.bottom = 'auto';
+
+                    // Update social button positions (centered when closed)
+                    socialButtons.forEach(button => {
+                        button.style.left = currentX + (buttonSize - socialButtonSize) / 2 + 'px';
+                        button.style.top = currentY + (buttonSize - socialButtonSize) / 2 + 'px';
+                    });
+                }
+            }
+
+            function stopDragging() {
+                isDragging = false;
+            }
+
+            // Initialize positions
+            currentX = window.innerWidth - buttonSize - 60; /* Maintain right padding */
+            currentY = window.innerHeight - buttonSize - 30;
+            plusButton.style.left = currentX + 'px';
+            plusButton.style.top = currentY + 'px';
+            socialButtons.forEach(button => {
+                button.style.left = currentX + (buttonSize - socialButtonSize) / 2 + 'px';
+                button.style.top = currentY + (buttonSize - socialButtonSize) / 2 + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
